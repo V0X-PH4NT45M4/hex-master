@@ -54,9 +54,13 @@ namespace engine {
 	// 4 more bits required. 
 	// Potentially use static map, or iterate over rules that masking and packing might work.
 	// It is really beneficial for the board state to be minimal because we will be running decision
-	// trees
-
-	
+	// trees sp we want to have two structures
+	// an array of bitmasks, 32 bits and the adj. matrix, using 0000 for a 54 * 54 matrix.
+	// In reality this graph is smaller, because #edges < 54 * 3
+	// I would prefer using an array with some logic to define the system over
+	// a list of arrays, because that is always slow  
+	// functionally how many bits of information do I need. 
+	// I need for each TILE 
 
 
 }

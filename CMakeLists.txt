@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)  # Adjust version as needed
-project(MyProject LANGUAGES CXX)      # Set project name
+project(HexMaster LANGUAGES CXX)      # Set project name
 
 # --- Configure Compiler Options ---
 set(CMAKE_CXX_STANDARD 17)            # C++17 (or higher)
@@ -11,10 +11,15 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")  # All .cpp files in src/
 file(GLOB_RECURSE HEADERS "include/*.hpp")  # All .hpp files in include/
 
 # --- Create Executable ---
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+# add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 # --- Include Directories ---
-target_include_directories(${PROJECT_NAME} PRIVATE include/)
+# target_include_directories(${PROJECT_NAME} PRIVATE include/)
 
 # --- Link Libraries (if needed) ---
 # target_link_libraries(${PROJECT_NAME} PRIVATE some_lib)
+
+# setup Qt6 Widgets for GUI
+find_package(Qt6 REQUIRED COMPONENTS Widgets Gui)
+qt_standard_project_setup()
+add_subdirectory(src/app)

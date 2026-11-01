@@ -22,6 +22,26 @@ namespace engine {
 		YEAR_OF_PLENTY,
 	};
 
+	const size_t portTypes = 7;
+	enum struct Port {
+		ORE,
+		WHEAT,
+		BRICK,
+		WOOD,
+		SHEEP,
+		WILD,
+		NONE,
+	};
+	
+	// players can be 2, 3 or 4
+	const size_t maxPlayers = 4;
+	enum struct Player {
+		BLINKY,
+		INKY,
+		PINKY,
+		CLYDE,
+	};
+
 	using resourceLedger = std::array<uint8_t, resourceTypes>;
 	using devCardLedger = std::array<uint8_t, devCardTypes>;
 
@@ -43,26 +63,51 @@ namespace engine {
 		Balance (resourceLedger& startingRes, devCardLedger& startingDevs); // to be used by the bank
 	};
 
-	// Board owns the G(V, E) that represents the game state
-	// Represent each vertex as a BIT_MASK
-	// TILE = (4 bits: number) + (3 bits: resource)
-	// for the number part, 1-12: number, 0: port, 15: desert
-	// Each vertex has 3 TILEs, and (settle, city) x #players so that's 3 bits again.
-	// so total each vertex is 3 TILES + 3 = 21 + 3 = 24
-	// we have 54 vertices so we can index them in 8 bits
-	// so a vertex should have 32 bits! That's an integer!
-	// 4 more bits required. 
-	// Potentially use static map, or iterate over rules that masking and packing might work.
-	// It is really beneficial for the board state to be minimal because we will be running decision
-	// trees sp we want to have two structures
-	// an array of bitmasks, 32 bits and the adj. matrix, using 0000 for a 54 * 54 matrix.
-	// In reality this graph is smaller, because #edges < 54 * 3
-	// I would prefer using an array with some logic to define the system over
-	// a list of arrays, because that is always slow  
-	// functionally how many bits of information do I need. 
-	// I need for each TILE 
 	struct BoardState {
+		// we will be using a 21 by 21 matrix to store game state
+		const static size_t systemSize = 21;
 
+		// our co-ordinate system, for symmetry, can go negative, this offset
+		// is to be used to translate the matrix indices to coordinates
+		// Location respects the contract of handling requests that are signed
+		const static size_t offset = 10;
+		struct Location {
+			int8_t q;
+			int8_t r;
+		};
+		// system (short for coordinate system) stores information
+		// to render board efficiently, currentState is the helper that applies
+		// offsets on Location and then fetches currentState from system
+		std::array<std::array<uint8_t, systemSize>, systemSize> system; 
+		uint8_t currentState(Location loc);
+
+		// markers for system layout (for UI rendering)
+		// more details @scripts/hex_coordinates.py
+		// layout is to be used by UI rendering to understand board state
+		enum struct Marker: uint8_t {
+			SENTINEL,
+			POINT,
+			EDGE,
+			TILE,
+			TABLE,
+		};
+		const static Marker renderLayout(Location loc);
+
+		// API to return rolled resources efficiently
+		std::array<std::array<uint8_t, resourceTypes>, maxPlayers> rolledResources(uint8_t diceRoll);
+
+		// place city/settle (decides which one by checking if player owns a settle on the requested spot)
+		bool placeCityOrSettle(Player owner, Location loc);
+
+		// place road (checks connectivity for player on requested spot, updates longest road)
+		bool placeRoad(Player owner, Location loc);
+
+		// place robber (just update the TILE's state, evaluates friendly robber)
+		bool placeRobber(Location loc);
+
+		// evaluate who currently has the longest road
+		// will need a DSU like structure for efficient querying
+		Player longestRoad();
 	};
 
 }

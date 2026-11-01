@@ -61,6 +61,8 @@ namespace engine {
 	// a list of arrays, because that is always slow  
 	// functionally how many bits of information do I need. 
 	// I need for each TILE 
-	struct BoardState {};
+	struct BoardState {
+
+	};
 
 }

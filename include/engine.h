@@ -106,8 +106,13 @@ namespace engine {
 		bool placeRobber(Location loc);
 
 		// evaluate who currently has the longest road
-		// will need a DSU like structure for efficient querying
+		// there are only 2 disconnected graphs, one extra scan required on connection
 		Player longestRoad();
+
+		// TODO: helper methods to interpret states for TILE, POINT, EDGE and fetching adj. Markers)
+		// TILE: digit(4 bits) + variant(3 bits) + robber(1 bit)
+		// POINT: owner(3 bits) + city/settle(1 bit) + port(3 bits) + chirality(1 bit)
+		// EDGE: owner(3 bits) + slope(2 bits)
 	};
 
 }

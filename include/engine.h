@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <cstdint>
+#include <limits.h>
 #include <iostream>
 
 namespace engine {
@@ -24,22 +25,29 @@ namespace engine {
 
 	const size_t portTypes = 7;
 	enum struct Port {
+		NONE,
 		ORE,
 		WHEAT,
 		BRICK,
 		WOOD,
 		SHEEP,
 		WILD,
-		NONE,
 	};
 	
 	// players can be 2, 3 or 4
 	const size_t maxPlayers = 4;
 	enum struct Player {
+		NONE,
 		BLINKY,
 		INKY,
 		PINKY,
 		CLYDE,
+	};
+
+	enum struct Building {
+		NONE,
+		CITY,
+		SETTLE,
 	};
 
 	using resourceLedger = std::array<uint8_t, resourceTypes>;
@@ -49,11 +57,8 @@ namespace engine {
 	struct Balance {
 		resourceLedger resBalance = {};
 		devCardLedger devBalance = {};
-		
-		enum struct State {
-			POSITIVE, 
-			NEGATIVE,
-		};
+		bool state;
+
 		// if balance goes negative, we return false, caller is responsible 
 		// for rolling back the transaction. The request is subtracted from the
 		// Balance. A negative request means we are adding to the Balance.
@@ -62,6 +67,54 @@ namespace engine {
 		Balance (); // to be used by the player
 		Balance (resourceLedger& startingRes, devCardLedger& startingDevs); // to be used by the bank
 	};
+
+	struct BoardTile {
+		enum struct Variant {
+			ORE,
+			WOOD,
+			SHEEP,
+			BRICK,
+			WHEAT,
+			DESERT,
+		};
+
+		// the current state of this tile, as stored in BoardState. Used to extract information about the TILE
+		// TILE: digit(4 bits) + variant(3 bits) + robber(1 bit)
+		uint8_t state; 
+
+		uint8_t getTileDigit();
+		Variant getTileVariant();
+		bool isTileBlocked();
+	};
+
+	struct BoardVertex {
+		// VERTEX: owner(3 bits) + city/settle(1 bit) + port(3 bits) + chirality(1 bit)
+		uint8_t state;
+
+		// chirality is important to determine the vertex's immediate neighbors
+		// a chirality of 1 means that the immediate neighbors are (q, -r, r-q)
+		// a chirality of 0 means that the immeidate neighbors are (-q, r, q-r)
+		bool getVertexChirality();
+		Player getVertexOwner();
+		Building getVertexBuilding();
+		Port getVertexPort();
+	};
+
+	struct BoardEdge {
+		enum struct Slope {
+			ALONG_Q,
+			ALONG_R,
+			ALONG_Q_MINUS_R,
+		};
+
+
+		// EDGE: owner(3 bits) + slope(2 bits)
+		uint8_t state; 
+
+		Player getEdgeOwner();
+		Slope getEdgeSlope();
+	};
+	
 
 	struct BoardState {
 		// we will be using a 21 by 21 matrix to store game state
@@ -109,10 +162,7 @@ namespace engine {
 		// there are only 2 disconnected graphs, one extra scan required on connection
 		Player longestRoad();
 
-		// TODO: helper methods to interpret states for TILE, POINT, EDGE and fetching adj. Markers)
-		// TILE: digit(4 bits) + variant(3 bits) + robber(1 bit)
-		// POINT: owner(3 bits) + city/settle(1 bit) + port(3 bits) + chirality(1 bit)
-		// EDGE: owner(3 bits) + slope(2 bits)
+		
 	};
 
 }

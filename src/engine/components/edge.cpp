@@ -17,67 +17,64 @@ namespace engine {
 			return Port(utils::extractBits(state, 0, 3));
 		}
 
-		using Position = BoardState::Location;
-		std::array<Position, 2> getAdjacentTiles(const Position &loc, const BoardState &boardState){	
-			Slope slope = getEdgeSlope(boardState.currentState(loc));
+		using Location = BoardState::Location;
+		std::array<Location, 2> getAdjacentTiles(const Location &loc, Slope slope){	
 			const auto [q, r] = loc;
 
 			switch (slope) {
 				case Slope::ALONG_Q:
-					return {Position(q+1,r-2),Position(q-1,r+2)};
+					return {Location(q+1,r-2), Location(q-1,r+2)};
 				case Slope::ALONG_R:
-					return {Position(q+2,r-1),Position(q-2,r+1)};
+					return {Location(q+2,r-1), Location(q-2,r+1)};
 				case Slope::ALONG_Q_MINUS_R:
-					return {Position(q+1,r+1),Position(q-1,r-1)};
+					return {Location(q+1,r+1), Location(q-1,r-1)};
 			}
 
-			return {Position(),Position()};
+			return {Location(), Location()};
 		}
 
-		std::array<Position, 4> getAdjacentEdges(const BoardState::Location &loc, const BoardState &boardState) {
-			Slope slope = getEdgeSlope(boardState.currentState(loc));
+		std::array<Location, 4> getAdjacentEdges(const BoardState::Location &loc, Slope slope) {
 			const auto [q, r] = loc;
 
 			switch (slope) {
 				case Slope::ALONG_Q:
 					return {
-						Position(q-1,r-1),
-						Position(q+1,r+1),
-						Position(q+2,r-1),
-						Position(q-2,r+1),
+						Location(q-1,r-1),
+						Location(q+1,r+1),
+						Location(q+2,r-1),
+						Location(q-2,r+1),
 					};
 				case Slope::ALONG_R:
 					return {
-						Position(q-1,r-1),
-						Position(q+1,r+1),
-						Position(q+1,r-2),
-						Position(q-1,r+2),
+						Location(q-1,r-1),
+						Location(q+1,r+1),
+						Location(q+1,r-2),
+						Location(q-1,r+2),
 					};
 				case Slope::ALONG_Q_MINUS_R:
 					return {
-						Position(q+1,r-2),
-						Position(q-1,r+2),
-						Position(q+2,r-1),
-						Position(q-2,r+1),
+						Location(q+1,r-2),
+						Location(q-1,r+2),
+						Location(q+2,r-1),
+						Location(q-2,r+1),
 					};
 			}
 
-			return {Position(), Position(), Position(), Position()};
+			return {Location(), Location(), Location(), Location()};
 		}
 
-		std::array<Position, 2> getAdjacentVertices(const Position &loc, const BoardState &boardState) {
-			Slope slope = getEdgeSlope(boardState.currentState(loc));
+		std::array<Location, 2> getAdjacentVertices(const Location &loc, Slope slope) {
 			auto [q, r] = loc;
 
 			switch (slope) {
 				case Slope::ALONG_Q:
-					return {Position(q+1,r), Position(q-1,r)};
+					return {Location(q+1,r), Location(q-1,r)};
 				case Slope::ALONG_R:
-					return {Position(q,r+1), Position(q,r-1)};
+					return {Location(q,r+1), Location(q,r-1)};
 				case Slope::ALONG_Q_MINUS_R:
-					return {Position(q-1,r+1), Position(q+1,r-1)};
+					return {Location(q-1,r+1), Location(q+1,r-1)};
 			}
-			return {Position(), Position()};
+			return {Location(), Location()};
 		}
 	};
 };

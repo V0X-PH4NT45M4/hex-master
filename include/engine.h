@@ -150,17 +150,21 @@ namespace engine {
 	namespace BoardVertex {
 		// VERTEX: owner(3 bits) + city/settle(1 bit) + port(3 bits) + chirality(1 bit)
 		// chirality is important to determine the vertex's immediate neighbors
-		// a chirality of 1 means that the immediate neighbors are (q, -r, r-q)
-		// a chirality of 0 means that the immeidate neighbors are (-q, r, q-r)
-		bool getVertexChirality(uint8_t state);
+		// a chirality of POSITIVE means that the immediate neighbors are (q, -r, r-q)
+		// a chirality of NEGATIVE means that the immeidate neighbors are (-q, r, q-r)
+		enum struct Chirality {
+			POSITIVE,
+			NEGATIVE,
+		};
+		Chirality getVertexChirality(uint8_t state);
 		Player getVertexOwner(uint8_t state);
 		Building getVertexBuilding(uint8_t state);
 		Port getVertexPort(uint8_t state);
 
 		// helpers to get adjacent markers
-		std::array<BoardState::Location, 3> getAdjacentTiles(const BoardState::Location &loc, bool chirality); 
-		std::array<BoardState::Location, 3> getAdjacentEdges(const BoardState::Location &loc, bool chirality);
-		std::array<BoardState::Location, 3> getAdjacentVertices(const BoardState::Location &loc, bool chirality);
+		std::array<BoardState::Location, 3> getAdjacentTiles(const BoardState::Location &loc, Chirality chirality); 
+		std::array<BoardState::Location, 3> getAdjacentEdges(const BoardState::Location &loc, Chirality chirality);
+		std::array<BoardState::Location, 3> getAdjacentVertices(const BoardState::Location &loc, Chirality chirality);
 	};
 
 	namespace BoardEdge {
@@ -176,9 +180,9 @@ namespace engine {
 
 		// helpers to get adjacent markers
 		// adjacent tiles can be atmost 2 for an edge, a coastal edge will return one tile and 
-		std::array<BoardState::Location, 2> getAdjacentTiles(const BoardState::Location &loc, const BoardState &boardState); 
-		std::array<BoardState::Location, 4> getAdjacentEdges(const BoardState::Location &loc, const BoardState &boardState);
-		std::array<BoardState::Location, 2> getAdjacentVertices(const BoardState::Location &loc, const BoardState &boardState);
+		std::array<BoardState::Location, 2> getAdjacentTiles(const BoardState::Location &loc, Slope slope); 
+		std::array<BoardState::Location, 4> getAdjacentEdges(const BoardState::Location &loc, Slope slope);
+		std::array<BoardState::Location, 2> getAdjacentVertices(const BoardState::Location &loc, Slope slope);
 
 	};
 

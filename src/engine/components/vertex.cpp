@@ -21,28 +21,28 @@ namespace engine {
 		}
 
 		using Location = BoardState::Location;
-		std::array<Location, 3> getAdjacentEdges(const Location &loc, bool chirality) {
+		std::array<Location, 3> getAdjacentEdges(const Location &loc, Chirality chirality) {
 			auto [q, r] = loc;
-			if (chirality) {
+			if (chirality == Chirality::POSITIVE) {
 				return {Location(q+1,r), Location(q,r-1), Location(q-1,r+1)};
 			}
 
 			return {Location(q-1,r), Location(q,r+1), Location(q+1,r-1)};
 		}
 
-		std::array<Location, 3> getAdjacentTiles(const Location &loc, bool chirality) {
+		std::array<Location, 3> getAdjacentTiles(const Location &loc, Chirality chirality) {
 			auto [q, r] = loc;
-			if (!chirality) {
+			if (chirality == Chirality::NEGATIVE) {
 				return {Location(q+1,r), Location(q,r-1), Location(q+1,r-1)};
 			}
 
 			return {Location(q-1,r), Location(q,r+1), Location(q+1,r-1)};
 		}
 
-		std::array<Location, 3> getAdjacentVertices(const Location &loc, bool chirality) {
+		std::array<Location, 3> getAdjacentVertices(const Location &loc, Chirality chirality) {
 			auto [q, r] = loc;
-			if (chirality) {
-				return {LOcation(q+2,r), Location(q,r-2), Location(q+2,r-2)};
+			if (chirality == Chirality::POSITIVE) {
+				return {Location(q+2,r), Location(q,r-2), Location(q+2,r-2)};
 			}
 
 			return {Location(q-2,r), Location(q,r+2), Location(q+2,r-2)};

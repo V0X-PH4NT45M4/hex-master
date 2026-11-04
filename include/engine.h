@@ -86,7 +86,7 @@ namespace engine {
 		// to render board efficiently, currentState is the helper that applies
 		// offsets on Location and then fetches currentState from system
 		std::array<std::array<uint8_t, systemSize>, systemSize> system; 
-		uint8_t currentState(Location loc);
+		uint8_t currentState(const Location &loc) const;
 
 		// markers for system layout (for UI rendering)
 		// more details @scripts/hex_coordinates.py
@@ -134,9 +134,9 @@ namespace engine {
 		bool isTileBlocked(uint8_t state);
 
 		// helpers to get adjacent markers
-		std::array<BoardState::Location, 6> getAdjacentTiles(BoardState::Location loc); 
-		std::array<BoardState::Location, 6> getAdjacentEdges(BoardState::Location loc);
-		std::array<BoardState::Location, 6> getAdjacentVertices(BoardState::Location loc);
+		std::array<BoardState::Location, 6> getAdjacentTiles(const BoardState::Location &loc); 
+		std::array<BoardState::Location, 6> getAdjacentEdges(const BoardState::Location &loc);
+		std::array<BoardState::Location, 6> getAdjacentVertices(const BoardState::Location &loc);
 	};
 
 	namespace BoardVertex {
@@ -150,9 +150,9 @@ namespace engine {
 		Port getVertexPort(uint8_t state);
 
 		// helpers to get adjacent markers
-		std::array<BoardState::Location, 3> getAdjacentTiles(BoardState::Location loc); 
-		std::array<BoardState::Location, 3> getAdjacentEdges(BoardState::Location loc);
-		std::array<BoardState::Location, 3> getAdjacentVertices(BoardState::Location loc);
+		std::array<BoardState::Location, 3> getAdjacentTiles(const BoardState::Location &loc, bool chirality); 
+		std::array<BoardState::Location, 3> getAdjacentEdges(const BoardState::Location &loc, bool chirality);
+		std::array<BoardState::Location, 3> getAdjacentVertices(const BoardState::Location &loc, bool chirality);
 	};
 
 	namespace BoardEdge {
@@ -161,14 +161,16 @@ namespace engine {
 			ALONG_R,
 			ALONG_Q_MINUS_R,
 		};
-		// EDGE: owner(3 bits) + slope(2 bits)
+		// EDGE: owner(3 bits) + slope(2 bits) + port(3 bits)
 		Player getEdgeOwner(uint8_t state);
 		Slope getEdgeSlope(uint8_t state);
+		Port getEdgePort(uint8_t state);
 
 		// helpers to get adjacent markers
-		std::array<BoardState::Location, 2> getAdjacentTiles(BoardState::Location loc); 
-		std::array<BoardState::Location, 4> getAdjacentEdges(BoardState::Location loc);
-		std::array<BoardState::Location, 2> getAdjacentVertices(BoardState::Location loc);
+		// adjacent tiles can be atmost 2 for an edge, a coastal edge will return one tile and 
+		std::array<BoardState::Location, 2> getAdjacentTiles(const BoardState::Location &loc, const BoardState &boardState); 
+		std::array<BoardState::Location, 4> getAdjacentEdges(const BoardState::Location &loc, const BoardState &boardState);
+		std::array<BoardState::Location, 2> getAdjacentVertices(const BoardState::Location &loc, const BoardState &boardState);
 
 	};
 

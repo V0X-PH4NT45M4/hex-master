@@ -81,6 +81,14 @@ namespace engine {
 		struct Location {
 			int8_t q;
 			int8_t r;
+
+			// Default constructor loads q and r with -INT8_MAX
+			Location();
+
+			// Creates q, r with location. If location is out of bounds
+			// of the map (renderLayout returns a SENTINEL/TABLE) then this instead
+			// loads q and r with -INT8_MAX
+			Location(int8_t q, int8_t r);
 		};
 		// system (short for coordinate system) stores information
 		// to render board efficiently, currentState is the helper that applies

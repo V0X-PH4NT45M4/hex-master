@@ -4,8 +4,8 @@
 
 namespace engine {
 	namespace BoardVertex {
-		bool getVertexChirality(uint8_t state) {
-			return bool(utils::extractBits(state, 0, 1));
+		Chirality getVertexChirality(uint8_t state) {
+			return Chirality(utils::extractBits(state, 0, 1));
 		}
 
 		Port getVertexPort(uint8_t state) {

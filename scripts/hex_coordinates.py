@@ -60,6 +60,18 @@ class catan_coordinate_system:
                     next_queue.append(((q + dq), (r + dr)))
             queue = next_queue
 
+        self.build_array()
+
+    # populate system into a 21 x 21 list
+    def build_array(self):
+
+        # init an array of sentinels
+        self.array = [[self.component.SENTINEL for _ in range(21)] for _ in range(21)]
+
+        for q in range(21):
+            for r in range(21):
+                if (q - self.offset, r - self.offset) in self.system:
+                    self.array[q][r] = self.system[(q - self.offset, r - self.offset)]
 
     # visualize entries in a 21 x 21 grid
     # coordinates will be added by offset to make them unsigned

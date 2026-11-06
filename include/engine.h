@@ -93,8 +93,13 @@ namespace engine {
 		// system (short for coordinate system) stores information
 		// to render board efficiently, currentState is the helper that applies
 		// offsets on Location and then fetches currentState from system
-		std::array<std::array<uint8_t, systemSize>, systemSize> system; 
+		std::array<std::array<uint8_t, systemSize>, systemSize> system;
 		uint8_t currentState(const Location &loc) const;
+
+		// Constructor to be used with initialized TABLE, to be used to generate MAP 
+		BoardState(std::array<std::array<uint8_t, systemSize>, systemSize> &system);
+		// Default constructor to generate a TABLE with MAP by itself
+		BoardState();
 
 		// markers for system layout (for UI rendering)
 		// more details @scripts/hex_coordinates.py

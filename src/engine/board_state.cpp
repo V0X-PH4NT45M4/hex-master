@@ -31,6 +31,17 @@ namespace engine {
 	// on rules for 
 	// a) tile placement (I believe no rules)
 	// b) number placement (I believe a fixed spiral pattern used by colonist.io and settlers-of-catan)
+	// steps:
+	// 1. mark and assign ports (TODO: Static method/table to access port information)
+	// 2. place the tiles and do spiral number provision (enumerate the tile TABLE and then hydrate the rest of the board)
+	// NOTE: number assignment must be done after tile placements so that we can simulate spiral logic with desert.
 	coordinateSystem fairBoardInit(){}
+
+	// random generation logic
+	// port edges can be (6C3) because of the 6 port pieces
+	// no rules on tile/number placement
+	// however for pseudo-random we still put the non-adj 6/8 rule
+	coordinateSystem pseudoRandomBoardInit(){}
+	coordinateSystem randomBoardInit(){}
 };
 

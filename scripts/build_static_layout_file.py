@@ -18,14 +18,14 @@ include_statements = [
 
 # we will use the board.system to populate lines
 # of the format f"\t{}"
-array= ["\tstatic constexpr std::array<std::array<Marker, 21>, 21> system{{",
+array= ["\tstatic constexpr std::array<std::array<Marker, engine::BoardState::systemSize>, engine::BoardState::systemSize> system{{",
         "\t}};",]
 
 function_body = [
         "using Marker = engine::BoardState::Marker;",
         "using Location = engine::BoardState::Location;",
         "const Marker renderLayout(Location loc){",
-        "\treturn system[loc.q + 10][loc.r + 10];",
+        "\treturn system[loc.q + engine::BoardState::offset][loc.r + engine::BoardState::offset];",
         "}",
 ]
 

@@ -7,7 +7,7 @@
 using Marker = engine::BoardState::Marker;
 using Location = engine::BoardState::Location;
 const Marker renderLayout(Location loc){
-	static constexpr std::array<std::array<Marker, 21>, 21> system{{
+	static constexpr std::array<std::array<Marker, engine::BoardState::systemSize>, engine::BoardState::systemSize> system{{
 		{
 			Marker::TABLE,
 			Marker::TABLE,
@@ -492,5 +492,5 @@ const Marker renderLayout(Location loc){
 			Marker::SENTINEL
 		},
 	}};
-	return system[loc.q + 10][loc.r + 10];
+	return system[loc.q + engine::BoardState::offset][loc.r + engine::BoardState::offset];
 }
